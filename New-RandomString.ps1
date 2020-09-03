@@ -3,17 +3,17 @@
 Generates a random string of 12 characters based on specified criteria such as which character sets are required.
 
 .DESCRIPTION
-This function, New-RandomString.ps1, generates a fixed length string of 12 characters, consisting of a set of character types that you specify, such as uppercase, lowercase, 
-numbers and special characters. It is convenient to generate random strings multiple times from the same script, but with different character set combinations. 
-Some scenarios for which this function can be used includes; For passwords. In Azure, a minimum password length of 12 characters is required, 
+This function, New-RandomString.ps1, generates a fixed length string of 12 characters, consisting of a set of character types that you specify, such as uppercase, lowercase,
+numbers and special characters. It is convenient to generate random strings multiple times from the same script, but with different character set combinations.
+Some scenarios for which this function can be used includes; For passwords. In Azure, a minimum password length of 12 characters is required,
 also Azure storage account names only accept lowercase and numeric characters, and Azure Site-To-Site VPN shared keys do not accept special characters.
 
 .EXAMPLE
-New-RandomString 
+New-RandomString
 
 .EXAMPLE
 New-RandomString -IncludeUpper -IncludeLower -IncludeNumbers -IncludeSpecial
- 
+
 .PARAMETER -IncludeUpper
 Include upper case letters. This parameter is an optional switch
 
@@ -36,12 +36,12 @@ Include special characters. This parameter is an optional switch
 .NOTES
 NAME: New-RandomString
 
-REQUIREMENTS: 
+REQUIREMENTS:
 -Version 5.0
 
 AUTHOR: Preston K. Parsard
 
-ATTRIBUTION: 
+ATTRIBUTION:
 NA
 
 LASTEDIT: 06 DEC 2016
@@ -52,19 +52,19 @@ LICENSE:
 The MIT License (MIT)
 Copyright (c) 2016 Preston K. Parsard
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"),
 to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. 
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
-DISCLAIMER: 
-THIS SAMPLE CODE AND ANY RELATED INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, 
-INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  We grant You a nonexclusive, 
-royalty-free right to use and modify the Sample Code and to reproduce and distribute the Sample Code, provided that You agree: (i) to not use Our name, 
-logo, or trademarks to market Your software product in which the Sample Code is embedded; 
-(ii) to include a valid copyright notice on Your software product in which the Sample Code is embedded; and (iii) to indemnify, hold harmless, 
-and defend Us and Our suppliers from and against any claims or lawsuits, including attorneys’ fees, 
+DISCLAIMER:
+THIS SAMPLE CODE AND ANY RELATED INFORMATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED,
+INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.  We grant You a nonexclusive,
+royalty-free right to use and modify the Sample Code and to reproduce and distribute the Sample Code, provided that You agree: (i) to not use Our name,
+logo, or trademarks to market Your software product in which the Sample Code is embedded;
+(ii) to include a valid copyright notice on Your software product in which the Sample Code is embedded; and (iii) to indemnify, hold harmless,
+and defend Us and Our suppliers from and against any claims or lawsuits, including attorneys’ fees,
 that arise or result from the use or distribution of the Sample Code.
 
 .LINK
@@ -77,7 +77,7 @@ TASK-INDEX: 000
 
 <#
 **************************************************************************************************************************************************************************
-REVISION/CHANGE RECORD	
+REVISION/CHANGE RECORD
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 DATE         VERSION    NAME			     CHANGE
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ DATE         VERSION    NAME			     CHANGE
 # Function to create a random string of 12 characters from each of the password complexity requirements set (Uppercase, Lowercase, Special and Numeric)
 Function New-RandomString
 {
- [CmdletBinding(SupportsShouldProcess=$true, 
+ [CmdletBinding(SupportsShouldProcess=$true,
   PositionalBinding=$false,
   HelpUri = 'https://gallery.technet.microsoft.com/scriptcenter',
   ConfirmImpact='Medium')]
@@ -120,10 +120,10 @@ Function New-RandomString
  [int]$SampleCount = 0
  # Represents the combination of options selected: i.e. U = uppercase, L = lowercase, N = numeric and S = special. If all 4 options are selected, then the value of $Switches will be ULNS.
  [string]$Switches = $null
- 
+
  # Alphabetic uppercase complexity rule
  $SCR1AlphaUpper = ([char[]]([char]65..[char]90))
- # Alphabetic lowercase complexity rule 
+ # Alphabetic lowercase complexity rule
  $SCR2AlphaLower = ([char[]]([char]97..[char]122))
  # Numeric complexity rule
  $SCR3Numeric = ([char[]]([char]48..[char]57))
@@ -131,7 +131,7 @@ Function New-RandomString
  $SCR4Special = ([char[]]([char]33..[char]47)) + ([char[]]([char]58..[char]64)) + ([char[]]([char]92..[char]95)) + ([char[]]([char]123..[char]126))
 
  # Combine all complexity rules arrays into one consolidated array for all possible character values
- 
+
  # Detect which switch parameters were used
  If ($IncludeUpper) { $Switches = "U" }
  If ($IncludeLower) { $Switches += "L" }
@@ -142,35 +142,35 @@ Function New-RandomString
  {
   # Calculate # of characters to sample per rule set
   [int]$SampleCount = $StringLength/($Switches.Length)
-   Switch ($Switches) 
+   Switch ($Switches)
    {
     # Alphabetic uppercase complexity rule
-    {$_ -match 'U'} 
-    { 
+    {$_ -match 'U'}
+    {
      Get-Random -InputObject $SCR1AlphaUpper -Count $SampleCount | ForEach-Object { $StringArrayU += $_ }
      $StringArray += $StringArrayU
-    } #end -match 
+    } #end -match
 
-    # Alphabetic lowercase complexity rule 
-    {$_ -match 'L'} 
-    { 
+    # Alphabetic lowercase complexity rule
+    {$_ -match 'L'}
+    {
      Get-Random -InputObject $SCR2AlphaLower -Count $SampleCount | ForEach-Object { $StringArrayL += $_ }
     $StringArray += $StringArrayL
     } #end -match
-    
+
     # Numeric complexity rule
-    {$_ -match 'N'} 
-    { 
+    {$_ -match 'N'}
+    {
      Get-Random -InputObject $SCR3Numeric -Count $SampleCount | ForEach-Object { $StringArrayN += $_ }
      $StringArray +=  $StringArrayN
-    } #end -match 
+    } #end -match
 
     # Special characters complexity rule
-    {$_ -match 'S'} 
-    { 
+    {$_ -match 'S'}
+    {
      Get-Random -InputObject $SCR4Special -Count $SampleCount | ForEach-Object { $StringArrayS += $_ }
      $StringArray +=  $StringArrayS
-    } #end -match 
+    } #end -match
    } #end Switch
  } #end If
  Else
@@ -188,7 +188,8 @@ Function New-RandomString
  } #end Else
 
  [string]$RandomStringWithSpaces = $StringArray
- $RandomString = $RandomStringWithSpaces.Replace(" ","") 
+ $RandomString = $RandomStringWithSpaces.Replace(" ","")
  Write-Host "`$Switches selected: $Switches"
  Write-Host  "Randomly generated 12 character string: " $RandomString
+ return $RandomString
 } #end Function
